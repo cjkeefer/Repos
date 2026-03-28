@@ -1,0 +1,8 @@
+Date,Description,Amount,Balance,Type,Note
+2024-01-15,Direct Deposit Salary,2500.00,5230.45,Credit,Monthly salary
+2024-01-14,Starbucks Coffee,-8.50,2730.45,Debit,
+2024-01-14,Shell Gas Station,-45.00,2738.95,Debit,
+2024-01-13,Payroll Deposit,2500.00,2783.95,Credit,
+2024-01-12,Whole Foods Grocery,-125.30,283.95,Debit,Weekly groceries
+2024-01-11,ATM Cash Withdrawal,-200.00,409.25,Debit,
+2024-01-10,Transfer from Savings,500.00,609.25,Credit,Emergency fund transfer

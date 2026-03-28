@@ -68,6 +68,47 @@ class TestBankCSVImporter(unittest.TestCase):
         self.assertEqual(summary['total_rows'], 3)
         self.assertIn('total_amount', summary)
 
+    def test_assign_notes(self):
+        """Test note assignment functionality."""
+        importer = BankCSVImporter(str(self.csv_path))
+        importer.import_file()
+        importer.validate_columns()
+        
+        result = importer.assign_notes()
+        self.assertTrue(result)
+        
+        # Check that Note column was added
+        self.assertIn('Note', importer.df.columns)
+        
+        # Check that withdrawal got a note
+        withdrawal_row = importer.df[importer.df['Description'] == 'Withdrawal'].iloc[0]
+        self.assertIn(withdrawal_row['Note'], ['ATM withdrawal', 'Cash withdrawal'])
+
+    def test_save_to_sqlite_avoids_duplicates(self):
+        """Test saving to SQLite and deduplication."""
+        importer = BankCSVImporter(str(self.csv_path))
+        importer.import_file()
+        importer.validate_columns()
+        importer.categorize_transactions()
+
+        db_path = Path(self.temp_dir) / 'test_transactions.db'
+        inserted_first = importer.save_to_sqlite(str(db_path), table_name='transactions')
+
+        self.assertEqual(inserted_first, 3)
+
+        # Second save should detect duplicates (no new rows inserted)
+        inserted_second = importer.save_to_sqlite(str(db_path), table_name='transactions')
+        self.assertEqual(inserted_second, 0)
+
+        # Optionally verify table rowcount from database
+        import sqlite3
+        with sqlite3.connect(str(db_path)) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT COUNT(*) FROM transactions')
+            count = cursor.fetchone()[0]
+
+        self.assertEqual(count, 3)
+
 
 if __name__ == '__main__':
     unittest.main()

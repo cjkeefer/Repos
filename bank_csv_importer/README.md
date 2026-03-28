@@ -47,6 +47,12 @@ python main.py import_csv data.csv
 python main.py import_csv data.csv --validate --summary
 ```
 
+### Save to SQLite database
+
+```bash
+python main.py import_csv data.csv --categorize --save-db --db-path bank_transactions.db
+```
+
 ### Specify bank type
 
 ```bash
@@ -133,6 +139,36 @@ Currently supports:
 - Wells Fargo
 
 (More bank formats can be easily added)
+
+## Adding New Bank Formats
+
+To add support for a new bank:
+
+1. **Add column mappings** in `src/importer.py`:
+   ```python
+   COLUMN_MAPPINGS = {
+       'your_bank': {
+           'date': ['Transaction Date', 'Date'],
+           'description': ['Description', 'Payee'],
+           'amount': ['Amount', 'Debit', 'Credit'],
+           'balance': ['Balance'],
+           'type': ['Type']
+       }
+   }
+   ```
+
+2. **Test with sample data**:
+   ```bash
+   python main.py import-csv your_sample.csv --bank your_bank --categorize
+   ```
+
+3. **Update CLI help** if needed (the bank option already accepts custom names)
+
+### Bank-Specific Column Examples
+
+- **Chase**: `Transaction Date`, `Posting Date`, `Description`, `Amount`, `Balance`, `Type`
+- **Bank of America**: `Date`, `Description`, `Amount`, `Running Bal.`
+- **Wells Fargo**: `Date`, `Description`, `Amount`, `Balance`
 
 ## Troubleshooting
 

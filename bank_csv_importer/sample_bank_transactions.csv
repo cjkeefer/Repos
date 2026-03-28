@@ -1,11 +1,16 @@
 Date,Description,Amount,Balance,Type
-2024-01-15,Direct Deposit,2500.00,5230.45,Credit
-2024-01-14,Coffee Shop,-8.50,2730.45,Debit
-2024-01-14,Gas Station,-45.00,2738.95,Debit
-2024-01-13,Paycheck,2500.00,2783.95,Credit
-2024-01-12,Grocery Store,-125.30,283.95,Debit
-2024-01-11,ATM Withdrawal,-200.00,409.25,Debit
-2024-01-10,Transfer In,500.00,609.25,Credit
-2024-01-09,Online Purchase,-89.99,109.25,Debit
-2024-01-08,Restaurant,-45.60,199.24,Debit
-2024-01-07,Pharmacy,-32.15,244.84,Debit
+2024-01-15,Direct Deposit Salary,2500.00,5230.45,Credit
+2024-01-14,Starbucks Coffee,-8.50,2730.45,Debit
+2024-01-14,Shell Gas Station,-45.00,2738.95,Debit
+2024-01-13,Payroll Deposit,2500.00,2783.95,Credit
+2024-01-12,Whole Foods Grocery,-125.30,283.95,Debit
+2024-01-11,ATM Cash Withdrawal,-200.00,409.25,Debit
+2024-01-10,Transfer from Savings,500.00,609.25,Credit
+2024-01-09,Amazon Online Purchase,-89.99,109.25,Debit
+2024-01-08,Italian Restaurant,-45.60,199.24,Debit
+2024-01-07,Walgreens Pharmacy,-32.15,244.84,Debit
+2024-01-06,Netflix Subscription,-15.99,212.69,Debit
+2024-01-05,Verizon Mobile Bill,-75.00,297.69,Debit
+2024-01-04,Home Depot Purchase,-120.50,373.19,Debit
+2024-01-03,Doctor Visit Copay,-25.00,398.19,Debit
+2024-01-02,Spotify Premium,-9.99,424.18,Debit
