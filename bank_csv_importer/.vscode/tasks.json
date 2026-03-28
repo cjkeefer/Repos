@@ -1,0 +1,53 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Bank CSV Importer - Help",
+			"type": "shell",
+			"command": "\"C:/Program Files/Python313/python.exe\"",
+			"args": ["main.py", "--help"],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
+		},
+		{
+			"label": "Run Bank CSV Importer - Sample",
+			"type": "shell",
+			"command": "\"C:/Program Files/Python313/python.exe\"",
+			"args": ["main.py", "sample"],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
+		},
+		{
+			"label": "Run Unit Tests",
+			"type": "shell",
+			"command": "\"C:/Program Files/Python313/python.exe\"",
+			"args": ["-m", "unittest", "tests.test_importer", "-v"],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
+		}
+	]
+}
