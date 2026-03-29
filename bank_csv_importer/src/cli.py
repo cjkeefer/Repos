@@ -4,6 +4,9 @@ import click
 from pathlib import Path
 from .importer import BankCSVImporter
 import json
+import tkinter as tk
+from tkinter import filedialog, messagebox, scrolledtext
+import threading
 
 
 @click.group()
@@ -15,7 +18,7 @@ def cli():
 
 @cli.command()
 @click.argument('filepath', type=click.Path(exists=True))
-@click.option('--bank', default='generic', help='Bank type (generic, chase, bofa, wells_fargo, or custom name)')
+@click.option('--bank', default='generic', help='Bank type (generic, chase, bofa, wells_fargo, psecu, or custom name)')
 @click.option('--validate', is_flag=True, help='Validate data after import')
 @click.option('--categorize', is_flag=True, help='Categorize transactions based on descriptions')
 @click.option('--summary', is_flag=True, help='Show summary statistics')
@@ -157,7 +160,7 @@ def export_json(filepath: str, output: str):
 
 @cli.command()
 @click.argument('filepath', type=click.Path(exists=True))
-@click.option('--bank', default='generic', help='Bank type (generic, chase, bofa, wells_fargo, or custom name)')
+@click.option('--bank', default='generic', help='Bank type (generic, chase, bofa, wells_fargo, psecu, or custom name)')
 @click.option('--output', '-o', type=click.Path(), help='Output file path for notes (optional)')
 @click.option('--save-db', is_flag=True, help='Save notes directly to SQLite database')
 @click.option('--db-path', default='transactions.db', help='Path to SQLite database file')
@@ -227,34 +230,185 @@ def add_notes(filepath: str, bank: str, output: str, save_db: bool, db_path: str
 
 
 @cli.command()
-def sample():
-    """Create a sample CSV file for testing."""
+def gui():
+    """Launch the graphical user interface."""
+    launch_gui()
+
+
+def launch_gui():
+    """Launch the GUI application."""
+    root = tk.Tk()
+    root.title("Bank CSV Importer")
+    root.geometry("800x600")
     
-    sample_data = """Date,Description,Amount,Balance,Type
-2024-01-15,Direct Deposit Salary,2500.00,5230.45,Credit
-2024-01-14,Starbucks Coffee,-8.50,2730.45,Debit
-2024-01-14,Shell Gas Station,-45.00,2738.95,Debit
-2024-01-13,Payroll Deposit,2500.00,2783.95,Credit
-2024-01-12,Whole Foods Grocery,-125.30,283.95,Debit
-2024-01-11,ATM Cash Withdrawal,-200.00,409.25,Debit
-2024-01-10,Transfer from Savings,500.00,609.25,Credit
-2024-01-09,Amazon Online Purchase,-89.99,109.25,Debit
-2024-01-08,Italian Restaurant,-45.60,199.24,Debit
-2024-01-07,Walgreens Pharmacy,-32.15,244.84,Debit
-2024-01-06,Netflix Subscription,-15.99,212.69,Debit
-2024-01-05,Verizon Mobile Bill,-75.00,297.69,Debit
-2024-01-04,Home Depot Purchase,-120.50,373.19,Debit
-2024-01-03,Doctor Visit Copay,-25.00,398.19,Debit
-2024-01-02,Spotify Premium,-9.99,424.18,Debit
-2024-01-01,Check Deposit,500.00,434.17,Credit
-"""
+    # Variables
+    filepath_var = tk.StringVar()
+    bank_var = tk.StringVar(value="generic")
+    validate_var = tk.BooleanVar()
+    categorize_var = tk.BooleanVar()
+    summary_var = tk.BooleanVar()
+    save_db_var = tk.BooleanVar()
+    notes_var = tk.BooleanVar()
+    db_path_var = tk.StringVar(value="transactions.db")
+    rows_var = tk.StringVar(value="20")
     
-    sample_path = Path("sample_bank_transactions.csv")
-    sample_path.write_text(sample_data)
+    # File selection
+    tk.Label(root, text="CSV File:").grid(row=0, column=0, sticky="w", padx=10, pady=5)
+    tk.Entry(root, textvariable=filepath_var, width=50).grid(row=0, column=1, padx=10, pady=5)
+    tk.Button(root, text="Browse", command=lambda: browse_file(filepath_var)).grid(row=0, column=2, padx=10, pady=5)
     
-    click.secho(f"✓ Sample CSV created: {sample_path}", fg='green')
-    click.echo("\nYou can now test with:")
-    click.echo(f"  python -m src.cli import_csv {sample_path} --categorize --summary")
+    # Bank type
+    tk.Label(root, text="Bank Type:").grid(row=1, column=0, sticky="w", padx=10, pady=5)
+    bank_options = ["generic", "chase", "bofa", "wells_fargo", "psecu"]
+    tk.OptionMenu(root, bank_var, *bank_options).grid(row=1, column=1, sticky="w", padx=10, pady=5)
+    
+    # Options
+    tk.Checkbutton(root, text="Validate Data", variable=validate_var).grid(row=2, column=0, sticky="w", padx=10, pady=5)
+    tk.Checkbutton(root, text="Categorize Transactions", variable=categorize_var).grid(row=2, column=1, sticky="w", padx=10, pady=5)
+    tk.Checkbutton(root, text="Show Summary", variable=summary_var).grid(row=3, column=0, sticky="w", padx=10, pady=5)
+    tk.Checkbutton(root, text="Assign Notes", variable=notes_var).grid(row=3, column=1, sticky="w", padx=10, pady=5)
+    tk.Checkbutton(root, text="Save to Database", variable=save_db_var).grid(row=4, column=0, sticky="w", padx=10, pady=5)
+    
+    # DB path
+    tk.Label(root, text="Database Path:").grid(row=5, column=0, sticky="w", padx=10, pady=5)
+    tk.Entry(root, textvariable=db_path_var, width=50).grid(row=5, column=1, padx=10, pady=5)
+    
+    # Rows
+    tk.Label(root, text="Display Rows:").grid(row=6, column=0, sticky="w", padx=10, pady=5)
+    tk.Entry(root, textvariable=rows_var, width=10).grid(row=6, column=1, sticky="w", padx=10, pady=5)
+    
+    # Import button
+    import_button = tk.Button(root, text="Import CSV", command=lambda: import_csv_gui(
+        filepath_var.get(), bank_var.get(), validate_var.get(), categorize_var.get(),
+        summary_var.get(), save_db_var.get(), notes_var.get(), db_path_var.get(),
+        int(rows_var.get()) if rows_var.get().isdigit() else 20, output_text
+    ))
+    import_button.grid(row=7, column=0, columnspan=3, pady=10)
+    
+    # Output text area
+    output_text = scrolledtext.ScrolledText(root, width=90, height=20)
+    output_text.grid(row=8, column=0, columnspan=3, padx=10, pady=10)
+    
+    root.mainloop()
+
+
+def browse_file(filepath_var):
+    """Browse for a CSV file."""
+    filename = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
+    if filename:
+        filepath_var.set(filename)
+
+
+def import_csv_gui(filepath, bank, validate, categorize, summary, save_db, notes, db_path, rows, output_text):
+    """Import CSV using GUI - runs in a separate thread to avoid freezing the GUI."""
+    def run_import():
+        try:
+            output_text.delete(1.0, tk.END)
+            output_text.insert(tk.END, f"Importing CSV from: {filepath}\n")
+            
+            importer = BankCSVImporter(filepath, bank_type=bank)
+            
+            # Import the file
+            if not importer.import_file():
+                output_text.insert(tk.END, "✗ Failed to import file:\n")
+                for error in importer.errors:
+                    output_text.insert(tk.END, f"  - {error}\n")
+                return
+            
+            output_text.insert(tk.END, "✓ File imported successfully\n")
+            output_text.insert(tk.END, f"  Rows: {len(importer.df)}, Columns: {len(importer.df.columns)}\n")
+            
+            # Validate columns
+            if validate or summary:
+                if not importer.validate_columns():
+                    output_text.insert(tk.END, "✗ Column validation failed:\n")
+                    for error in importer.errors:
+                        output_text.insert(tk.END, f"  - {error}\n")
+                    return
+                
+                output_text.insert(tk.END, "✓ Columns validated\n")
+                
+                # Validate data
+                if not importer.validate_data():
+                    output_text.insert(tk.END, "✗ Data validation failed:\n")
+                    for error in importer.errors:
+                        output_text.insert(tk.END, f"  - {error}\n")
+                    return
+                
+                if importer.warnings:
+                    output_text.insert(tk.END, "⚠ Warnings:\n")
+                    for warning in importer.warnings:
+                        output_text.insert(tk.END, f"  - {warning}\n")
+                
+                output_text.insert(tk.END, "✓ Data validated\n")
+            
+            # Categorize transactions
+            if categorize or summary:
+                if not importer.categorize_transactions():
+                    output_text.insert(tk.END, "✗ Categorization failed:\n")
+                    for error in importer.errors:
+                        output_text.insert(tk.END, f"  - {error}\n")
+                    return
+                
+                output_text.insert(tk.END, "✓ Transactions categorized\n")
+            
+            # Assign notes
+            if notes or summary:
+                if not importer.assign_notes():
+                    output_text.insert(tk.END, "✗ Note assignment failed:\n")
+                    for error in importer.errors:
+                        output_text.insert(tk.END, f"  - {error}\n")
+                    return
+                
+                output_text.insert(tk.END, "✓ Notes assigned\n")
+            
+            # Display data
+            output_text.insert(tk.END, "\nData Preview:\n")
+            output_text.insert(tk.END, "-" * 80 + "\n")
+            # Get the display string
+            import io
+            import sys
+            old_stdout = sys.stdout
+            sys.stdout = buffer = io.StringIO()
+            importer.display_data(max_rows=rows)
+            sys.stdout = old_stdout
+            output_text.insert(tk.END, buffer.getvalue())
+            
+            # Show summary
+            if summary:
+                output_text.insert(tk.END, "\nSummary Statistics:\n")
+                output_text.insert(tk.END, "-" * 80 + "\n")
+                summary_data = importer.get_summary()
+                
+                for key, value in summary_data.items():
+                    if isinstance(value, dict):
+                        output_text.insert(tk.END, f"{key}:\n")
+                        for k, v in value.items():
+                            output_text.insert(tk.END, f"  {k}: {v}\n")
+                    elif isinstance(value, list):
+                        output_text.insert(tk.END, f"{key}: {', '.join(map(str, value[:5]))}\n")
+                        if len(value) > 5:
+                            output_text.insert(tk.END, f"  ... and {len(value) - 5} more\n")
+                    else:
+                        output_text.insert(tk.END, f"{key}: {value}\n")
+            
+            if save_db:
+                inserted = importer.save_to_sqlite(db_path=db_path)
+                if inserted > 0:
+                    output_text.insert(tk.END, f"✓ Saved {inserted} new transaction(s) to database: {db_path}\n")
+                else:
+                    if importer.errors:
+                        output_text.insert(tk.END, "✗ Save to database failed:\n")
+                        for error in importer.errors:
+                            output_text.insert(tk.END, f"  - {error}\n")
+                    else:
+                        output_text.insert(tk.END, "✓ No new transactions to save (duplicates skipped).\n")
+        
+        except Exception as e:
+            output_text.insert(tk.END, f"✗ Error: {str(e)}\n")
+    
+    # Run in a separate thread to avoid freezing the GUI
+    threading.Thread(target=run_import, daemon=True).start()
 
 
 if __name__ == '__main__':

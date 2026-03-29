@@ -172,7 +172,7 @@ class BankCSVImporter:
         
         Args:
             file_path: Path to the CSV file
-            bank_type: Type of bank (generic, chase, bofa, wells_fargo, etc.)
+            bank_type: Type of bank (generic, chase, bofa, wells_fargo, psecu, etc.)
         """
         self.file_path = Path(file_path)
         self.bank_type = bank_type

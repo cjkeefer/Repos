@@ -11,6 +11,7 @@ A Python console application for importing and validating bank CSV files. Suppor
 - **Data Preview**: Display imported data in a formatted table
 - **Export**: Convert CSV data to JSON format
 - **CLI Interface**: Easy-to-use command-line interface with Click
+- **GUI Interface**: User-friendly graphical interface for easy operation
 
 ## Installation
 
@@ -79,6 +80,22 @@ python main.py sample
 
 This creates a `sample_bank_transactions.csv` file for testing.
 
+## GUI Usage
+
+Launch the graphical user interface:
+
+```bash
+python main.py gui
+```
+
+The GUI provides:
+- File browser to select CSV files
+- Bank type selection dropdown
+- Checkboxes for validation, categorization, summary, notes, and database saving
+- Database path configuration
+- Display row count setting
+- Real-time output in a scrollable text area
+
 ## CSV Format
 
 Your CSV file should include these columns (exact names may vary):
@@ -137,6 +154,7 @@ Currently supports:
 - Chase
 - Bank of America
 - Wells Fargo
+- PSECU
 
 (More bank formats can be easily added)
 
@@ -189,7 +207,6 @@ These indicate rows with data that doesn't match the expected format. Review tho
 - [ ] Duplicate transaction detection
 - [ ] Category tagging and reporting
 - [ ] Database integration for persistent storage
-- [ ] GUI interface
 
 ## License
 
