@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/config/googleconfig.ts","./src/config/msalconfig.ts","./src/pages/about.tsx","./src/pages/calendar.tsx","./src/pages/contact.tsx","./src/pages/home.tsx"],"version":"5.9.3"}

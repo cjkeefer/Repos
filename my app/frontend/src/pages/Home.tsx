@@ -14,6 +14,11 @@ interface WeatherData {
       temperature_2m_min: number[]
       weather_code: number[]
     }
+    hourly: {
+      time: string[]
+      temperature_2m: number[]
+      weather_code: number[]
+    }
   }
   location: {
     latitude: number
@@ -27,10 +32,27 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null)
+  const [cityName, setCityName] = useState<string | null>(null)
+  const [selectedDay, setSelectedDay] = useState<number | null>(null)
 
   // Convert Celsius to Fahrenheit
   const celsiusToFahrenheit = (celsius: number): string => {
     return ((celsius * 9) / 5 + 32).toFixed(1)
+  }
+
+  // Get city name from coordinates
+  const getCityName = async (lat: number, lon: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/weather/reverse-geocode?lat=${lat}&lon=${lon}`
+      )
+      if (response.ok) {
+        const data = await response.json()
+        setCityName(data.city)
+      }
+    } catch (error) {
+      console.error('Failed to get city name:', error)
+    }
   }
 
   // Get user's geolocation
@@ -62,6 +84,10 @@ export default function Home() {
     try {
       setLoading(true)
       setError(null)
+      
+      // Get city name from coordinates
+      await getCityName(lat, lon)
+      
       const response = await fetch(
         `http://localhost:8000/api/weather?lat=${lat}&lon=${lon}`
       )
@@ -116,6 +142,41 @@ export default function Home() {
     return weatherCodes[code] || 'Unknown'
   }
 
+  // Convert 24-hour time to 12-hour AM/PM format
+  const convert24To12Hour = (time24: string): string => {
+    const [hours, minutes] = time24.split(':')
+    const hour = parseInt(hours)
+    const ampm = hour >= 12 ? 'PM' : 'AM'
+    const hour12 = hour % 12 || 12
+    return `${hour12}:${minutes} ${ampm}`
+  }
+
+  // Get hourly data for selected day
+  const getHourlyDataForDay = (dayIndex: number) => {
+    if (!weather?.forecast.hourly) return []
+    
+    const selectedDate = weather.forecast.daily.time[dayIndex]
+    const hourlyData = weather.forecast.hourly
+    const hourlyTimes = hourlyData.time || []
+    
+    // Filter hourly data for the selected date
+    const dayHours = hourlyTimes
+      .map((time, idx) => {
+        const timeDate = time.split('T')[0]
+        if (timeDate === selectedDate) {
+          return {
+            time: time.split('T')[1], // Get just the time part
+            temperature: hourlyData.temperature_2m?.[idx],
+            weatherCode: hourlyData.weather_code?.[idx]
+          }
+        }
+        return null
+      })
+      .filter(item => item !== null)
+    
+    return dayHours
+  }
+
   return (
     <div>
       <h1>Weather Forecast</h1>
@@ -128,7 +189,12 @@ export default function Home() {
         <div className="weather-container">
           <div className="current-weather">
             <h2>Current Weather</h2>
-            {location && (
+            {cityName && (
+              <p style={{ fontSize: '1.1em', margin: '0 0 1rem 0', color: '#4ade80' }}>
+                📍 {cityName}
+              </p>
+            )}
+            {location && !cityName && (
               <p style={{ fontSize: '0.9em', opacity: 0.8 }}>
                 📍 Lat: {location.lat.toFixed(2)}, Lon: {location.lon.toFixed(2)}
               </p>
@@ -159,7 +225,12 @@ export default function Home() {
             <h3>7-Day Forecast</h3>
             <div className="forecast-grid">
               {weather.forecast.daily.time.map((date, index) => (
-                <div key={index} className="forecast-day">
+                <div
+                  key={index}
+                  className={`forecast-day ${selectedDay === index ? 'active' : ''}`}
+                  onClick={() => setSelectedDay(selectedDay === index ? null : index)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <p className="forecast-date">{new Date(date).toLocaleDateString()}</p>
                   <p className="forecast-condition">
                     {getWeatherDescription(weather.forecast.daily.weather_code[index])}
@@ -171,6 +242,21 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
+            {selectedDay !== null && (
+              <div className="hourly-forecast">
+                <h4>Hourly Forecast for {new Date(weather.forecast.daily.time[selectedDay]).toLocaleDateString()}</h4>
+                <div className="hourly-grid">
+                  {getHourlyDataForDay(selectedDay).map((hour: any, idx) => (
+                    <div key={idx} className="hourly-item">
+                      <p className="hourly-time">{convert24To12Hour(hour.time.substring(0, 5))}</p>
+                      <p className="hourly-temp">{celsiusToFahrenheit(hour.temperature)}°F</p>
+                      <p className="hourly-condition">{getWeatherDescription(hour.weatherCode)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <button onClick={() => getLocation()}>Refresh Weather</button>

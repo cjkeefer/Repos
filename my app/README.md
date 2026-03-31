@@ -71,11 +71,52 @@ my app/
 └── docker-compose.yml        # Docker orchestration
 ```
 
+## Features
+
+- **Weather Forecast**: Real-time weather with current conditions and 7-day forecast
+  - Current temperature, humidity, wind speed
+  - Hourly weather breakdown with 12-hour AM/PM format
+  - Fahrenheit display with automatic Celsius conversion
+  - Automatic geolocation-based weather lookup
+  - City name detection via reverse geocoding
+  - Clickable hourly forecast cards
+
+- **Calendar Integration**: Connect to Google Calendar and Outlook
+  - View Google Calendar events
+  - View Microsoft Outlook/Office 365 events
+  - Tab-based interface to switch between providers
+  - Detailed event information display (title, time, description)
+  - Setup guide for easy OAuth configuration
+
+- **Multi-page Navigation**: React Router with responsive pages
+  - Home (Weather forecast page)
+  - About (Information page)
+  - Calendar (Dual calendar integration)
+  - Contact (Contact form)
+
 ## API Endpoints
 
-- `GET /api/message` - Get a message from the backend
+### Weather
+- `GET /api/message` - Get a test message from backend
 - `GET /api/health` - Health check endpoint
-- `GET /` - API root endpoint
+- `GET /api/weather?lat=X&lon=Y` - Get weather for coordinates
+- `GET /api/weather/search?name=CityName` - Search for locations
+- `GET /api/weather/reverse-geocode?lat=X&lon=Y` - Get city name from coordinates
+
+### Calendar (Backend Support)
+- `POST /api/calendar/sync` - Sync calendar data
+- `GET /api/calendar/events` - Get stored calendar events
+- `POST /api/calendar/create-event` - Create new event
+
+## Calendar Setup
+
+See [CALENDAR_SETUP.md](CALENDAR_SETUP.md) for detailed instructions on:
+- Setting up Google Calendar OAuth (with screenshots and step-by-step guide)
+- Setting up Outlook Calendar via Azure AD (with portal navigation steps)
+- Configuring API permissions for each provider
+- Testing the calendar integration
+- Troubleshooting common issues
+- Production security best practices
 
 ## Development Tips
 
@@ -95,9 +136,24 @@ npm run build
 docker-compose up --build
 ```
 
+## Environment Configuration
+
+Create a `.env.local` file in the `frontend/` directory with your OAuth credentials:
+
+```env
+VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
+VITE_AZURE_CLIENT_ID=your_azure_client_id_here
+```
+
+See [CALENDAR_SETUP.md](CALENDAR_SETUP.md) for detailed instructions on obtaining these credentials.
+
 ## Next Steps
 
+- Configure OAuth credentials for calendar features
 - Add database support (PostgreSQL, MongoDB, etc.)
+- Implement event creation UI
+- Add calendar event editing and deletion
+- Implement email notifications for events
 - Implement authentication
 - Add more API endpoints
 - Create frontend components and pages
