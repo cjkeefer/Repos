@@ -3,12 +3,19 @@ from flask_cors import CORS
 import os
 import requests
 from config import config
+from db import (init_db, get_all_chores, add_chore, toggle_chore, delete_chore, update_chore,
+                get_all_menu, add_menu_item, delete_menu_item,
+                get_all_grocery, add_grocery_item, toggle_grocery_purchased, delete_grocery_item)
 
 app = Flask(__name__)
 app.config.from_object(config[os.getenv('FLASK_ENV', 'development')])
 
 # Enable CORS for all routes
 CORS(app)
+
+# Initialize database
+with app.app_context():
+    init_db()
 
 # Weather API endpoints
 WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast"
@@ -325,6 +332,282 @@ def create_calendar_event():
     except Exception as e:
         return jsonify({
             'error': f'Failed to create event: {str(e)}',
+            'status': 'error'
+        }), 500
+
+# Chore List API Endpoints
+@app.route('/api/chores', methods=['GET'])
+def get_chores():
+    """
+    Get all chores from the database
+    """
+    try:
+        chores = get_all_chores()
+        return jsonify({
+            'status': 'success',
+            'chores': chores
+        })
+    except Exception as e:
+        return jsonify({
+            'error': f'Failed to fetch chores: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/chores', methods=['POST'])
+def create_chore():
+    """
+    Create a new chore
+    POST body: {
+        "title": "Wash dishes",
+        "assignedTo": "John",
+        "dueDate": "2026-03-31"
+    }
+    """
+    try:
+        data = request.get_json()
+        title = data.get('title')
+        assigned_to = data.get('assignedTo')
+        due_date = data.get('dueDate')
+        
+        if not all([title, assigned_to, due_date]):
+            return jsonify({
+                'error': 'Missing required fields: title, assignedTo, dueDate'
+            }), 400
+        
+        chore = add_chore(title, assigned_to, due_date)
+        return jsonify({
+            'status': 'success',
+            'message': 'Chore created successfully',
+            'chore': chore
+        }), 201
+    
+    except Exception as e:
+        return jsonify({
+            'error': f'Failed to create chore: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/chores/<int:chore_id>', methods=['PUT'])
+def update_chore_status(chore_id):
+    """
+    Update a chore (toggle completed status or update fields)
+    PUT body: {
+        "completed": true,  # optional - toggles if not provided
+        "title": "New title",  # optional
+        "assignedTo": "John",  # optional
+        "dueDate": "2026-04-01"  # optional
+    }
+    """
+    try:
+        data = request.get_json(silent=True) or {}
+        
+        # If no data provided, just toggle completed status
+        if not data or 'completed' in data:
+            chore = toggle_chore(chore_id)
+        else:
+            # Update specific fields
+            title = data.get('title')
+            assigned_to = data.get('assignedTo')
+            due_date = data.get('dueDate')
+            chore = update_chore(chore_id, title, assigned_to, due_date)
+        
+        if not chore:
+            return jsonify({
+                'error': 'Chore not found',
+                'status': 'not_found'
+            }), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Chore updated successfully',
+            'chore': chore
+        })
+    
+    except Exception as e:
+        print(f"Error in update_chore_status: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': f'Failed to update chore: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/chores/<int:chore_id>', methods=['DELETE'])
+def remove_chore(chore_id):
+    """
+    Delete a chore
+    """
+    try:
+        success = delete_chore(chore_id)
+        
+        if not success:
+            return jsonify({
+                'error': 'Chore not found',
+                'status': 'not_found'
+            }), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Chore deleted successfully'
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'error': f'Failed to delete chore: {str(e)}',
+            'status': 'error'
+        }), 500
+
+# Menu API Endpoints
+@app.route('/api/menu', methods=['GET'])
+def get_menu():
+    """Get all menu items"""
+    try:
+        items = get_all_menu()
+        return jsonify({
+            'status': 'success',
+            'items': items
+        })
+    except Exception as e:
+        print(f"Error in get_menu: {str(e)}")
+        return jsonify({
+            'error': f'Failed to fetch menu: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/menu', methods=['POST'])
+def create_menu():
+    """Create a new menu item"""
+    try:
+        data = request.get_json() or {}
+        name = data.get('name')
+        day = data.get('day')
+        ingredients = data.get('ingredients')
+        
+        if not name or not day:
+            return jsonify({
+                'error': 'Missing required fields: name, day'
+            }), 400
+        
+        item = add_menu_item(name, day, ingredients)
+        return jsonify({
+            'status': 'success',
+            'message': 'Menu item added',
+            'item': item
+        }), 201
+    except Exception as e:
+        print(f"Error in create_menu: {str(e)}")
+        return jsonify({
+            'error': f'Failed to add menu item: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/menu/<int:item_id>', methods=['DELETE'])
+def remove_menu(item_id):
+    """Delete a menu item"""
+    try:
+        success = delete_menu_item(item_id)
+        if not success:
+            return jsonify({
+                'error': 'Menu item not found',
+                'status': 'not_found'
+            }), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Menu item deleted'
+        })
+    except Exception as e:
+        print(f"Error in remove_menu: {str(e)}")
+        return jsonify({
+            'error': f'Failed to delete menu item: {str(e)}',
+            'status': 'error'
+        }), 500
+
+# Grocery API Endpoints
+@app.route('/api/grocery', methods=['GET'])
+def get_grocery():
+    """Get all grocery items"""
+    try:
+        items = get_all_grocery()
+        return jsonify({
+            'status': 'success',
+            'items': items
+        })
+    except Exception as e:
+        print(f"Error in get_grocery: {str(e)}")
+        return jsonify({
+            'error': f'Failed to fetch grocery items: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/grocery', methods=['POST'])
+def create_grocery():
+    """Create a new grocery item"""
+    try:
+        data = request.get_json() or {}
+        name = data.get('name')
+        quantity = data.get('quantity')
+        
+        if not name:
+            return jsonify({
+                'error': 'Missing required field: name'
+            }), 400
+        
+        item = add_grocery_item(name, quantity)
+        return jsonify({
+            'status': 'success',
+            'message': 'Grocery item added',
+            'item': item
+        }), 201
+    except Exception as e:
+        print(f"Error in create_grocery: {str(e)}")
+        return jsonify({
+            'error': f'Failed to add grocery item: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/grocery/<int:item_id>', methods=['PUT'])
+def update_grocery(item_id):
+    """Toggle purchased status of a grocery item"""
+    try:
+        item = toggle_grocery_purchased(item_id)
+        if not item:
+            return jsonify({
+                'error': 'Grocery item not found',
+                'status': 'not_found'
+            }), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Grocery item updated',
+            'item': item
+        })
+    except Exception as e:
+        print(f"Error in update_grocery: {str(e)}")
+        return jsonify({
+            'error': f'Failed to update grocery item: {str(e)}',
+            'status': 'error'
+        }), 500
+
+@app.route('/api/grocery/<int:item_id>', methods=['DELETE'])
+def remove_grocery(item_id):
+    """Delete a grocery item"""
+    try:
+        success = delete_grocery_item(item_id)
+        if not success:
+            return jsonify({
+                'error': 'Grocery item not found',
+                'status': 'not_found'
+            }), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Grocery item deleted'
+        })
+    except Exception as e:
+        print(f"Error in remove_grocery: {str(e)}")
+        return jsonify({
+            'error': f'Failed to delete grocery item: {str(e)}',
             'status': 'error'
         }), 500
 

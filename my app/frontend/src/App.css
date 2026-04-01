@@ -483,3 +483,538 @@
 .instruction-section a:hover {
   text-decoration: underline;
 }
+
+/* Family Chore List Styles */
+.todo-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.todo-container h1 {
+  color: #4ade80;
+  margin-bottom: 0.5rem;
+  font-size: 2.5em;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 8px;
+  color: #fca5a5;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.todo-stats {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2rem;
+  font-size: 1.1em;
+}
+
+.add-task-section {
+  background: rgba(74, 222, 128, 0.05);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.add-task-section h2 {
+  color: #4ade80;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.add-task-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.add-task-form input {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.75rem;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1em;
+}
+
+.add-task-form input:focus {
+  outline: none;
+  border-color: #4ade80;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.add-task-form input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.add-task-form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #4ade80;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1em;
+}
+
+.add-task-form button:hover {
+  background-color: #22c55e;
+  transform: scale(1.05);
+}
+
+.tasks-section {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+}
+
+.tasks-section h2 {
+  color: #4ade80;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(74, 222, 128, 0.03);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.task-item:hover {
+  background: rgba(74, 222, 128, 0.08);
+  border-color: rgba(74, 222, 128, 0.3);
+  transform: translateX(4px);
+}
+
+.task-item.completed {
+  opacity: 0.6;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.task-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.task-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.2rem;
+  cursor: pointer;
+  accent-color: #4ade80;
+}
+
+.task-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.task-title {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 1.05em;
+}
+
+.task-meta {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85em;
+}
+
+.delete-button {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.delete-button:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+.no-tasks {
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1em;
+}
+
+/* Menu & Grocery List Styles */
+.grocery-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.grocery-container h1 {
+  color: #4ade80;
+  margin-bottom: 2rem;
+  font-size: 2.5em;
+}
+
+.grocery-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: rgba(74, 222, 128, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(74, 222, 128, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+  background: rgba(74, 222, 128, 0.25);
+}
+
+.tab-button.active {
+  background: #4ade80;
+  color: #000;
+  font-weight: 600;
+}
+
+.menu-section {
+  display: grid;
+  gap: 2rem;
+}
+
+.add-menu-section {
+  background: rgba(74, 222, 128, 0.05);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.add-menu-section h2 {
+  color: #4ade80;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.add-menu-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.add-menu-form input,
+.add-menu-form select {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.75rem;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1em;
+}
+
+.add-menu-form select {
+  cursor: pointer;
+}
+
+.add-menu-form input:focus,
+.add-menu-form select:focus {
+  outline: none;
+  border-color: #4ade80;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.add-menu-form input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.add-menu-form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #4ade80;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-menu-form button:hover {
+  background-color: #22c55e;
+  transform: scale(1.05);
+}
+
+.menu-list-section {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+}
+
+.menu-list-section h2 {
+  color: #4ade80;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.menu-card {
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.menu-card:hover {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: rgba(74, 222, 128, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(74, 222, 128, 0.1);
+}
+
+.menu-day {
+  display: inline-block;
+  background: #4ade80;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85em;
+  margin-bottom: 1rem;
+}
+
+.menu-card h3 {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.5rem 0;
+  font-size: 1.3em;
+}
+
+.ingredients {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9em;
+  line-height: 1.5;
+  margin: 0.75rem 0 0 0;
+}
+
+.delete-button-small {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5em;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.delete-button-small:hover {
+  background: rgba(239, 68, 68, 0.5);
+  border-color: rgba(239, 68, 68, 0.7);
+  color: #fecaca;
+}
+
+.empty-state {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1em;
+}
+
+.grocery-section {
+  display: grid;
+  gap: 2rem;
+}
+
+.grocery-stats {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1em;
+  margin: 0;
+}
+
+.add-grocery-section {
+  background: rgba(74, 222, 128, 0.05);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.add-grocery-section h2 {
+  color: #4ade80;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.add-grocery-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.add-grocery-form input {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.75rem;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1em;
+}
+
+.add-grocery-form input:focus {
+  outline: none;
+  border-color: #4ade80;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.add-grocery-form input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.add-grocery-form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #4ade80;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-grocery-form button:hover {
+  background-color: #22c55e;
+  transform: scale(1.05);
+}
+
+.grocery-list-section {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+}
+
+.grocery-list-section h2 {
+  color: #4ade80;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.grocery-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.grocery-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(74, 222, 128, 0.03);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.grocery-item:hover {
+  background: rgba(74, 222, 128, 0.08);
+  border-color: rgba(74, 222, 128, 0.3);
+  transform: translateX(4px);
+}
+
+.grocery-item.purchased {
+  opacity: 0.6;
+}
+
+.grocery-item.purchased .grocery-name {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.grocery-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.grocery-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.2rem;
+  cursor: pointer;
+  accent-color: #4ade80;
+}
+
+.grocery-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.grocery-name {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 1.05em;
+}
+
+.grocery-qty {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85em;
+}
