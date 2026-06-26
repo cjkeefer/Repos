@@ -98,61 +98,10 @@ class BankCSVImporter:
         ],
         'Transfers': [
             'transfer', 'wire', 'ach', 'internal transfer', 'between accounts'
-        ]
-    }
-    
-    # Transaction category mappings based on description patterns
-    CATEGORY_MAPPINGS_MINE = {
-        'Income': [
-            'direct deposit', 'payroll', 'salary', 'deposit', 'transfer in',
-            'income', 'wage', 'paycheck', 'refund', 'rebate', 'bonus','pershing'
-        ],
-        'Groceries': [
-            'grocery', 'supermarket', 'whole foods', 'safeway', 'kroger',
-            'walmart', 'target', 'costco', 'trader joe', 'publix', 'meijer'
-        ],
-        'Dining': [
-            'restaurant', 'cafe', 'coffee', 'starbucks', 'mcdonald', 'burger king',
-            'subway', 'pizza', 'taco', 'chinese', 'italian', 'mexican', 'thai'
-        ],
-        'Transportation': [
-            'gas', 'fuel', 'shell', 'chevron', 'exxon', 'bp', 'mobil',
-            'uber', 'lyft', 'taxi', 'parking', 'toll', 'transit', 'bus', 'train'
-        ],
-        'Entertainment': [
-            'netflix', 'spotify', 'amazon prime', 'hulu', 'disney', 'movie',
-            'theater', 'concert', 'game', 'steam', 'playstation', 'xbox',
-            'peacock', 'paramount', 'apple tv', 'vudu', 'fandango'
-        ],
-        'Utilities': [
-            'electric', 'power', 'gas utility', 'sewer', 'internet','ppl', 'veolia',
-            'cable', 'phone', 'mobile', 'verizon', 'att', 'tmobile', 'comcast'
-        ],
-        'Healthcare': [
-            'pharmacy', 'doctor', 'hospital', 'dental', 'medical', 'cvs',
-            'walgreens', 'rite aid', 'kaiser', 'anthem', 'blue cross'
-        ],
-        'Shopping': [
-            'amazon', 'ebay', 'etsy', 'best buy', 'home depot', 'lowes',
-            'ikea', 'macy', 'nordstrom', 'clothing', 'shoes', 'jewelry'
-        ],
-        'Bills & Payments': [
-            'payment', 'bill pay', 'auto pay', 'insurance', 'mortgage',
-            'rent', 'loan', 'credit card', 'minimum payment'
-        ],
-        'ATM & Cash': [
-            'atm', 'withdrawal', 'cash', 'check', 'money order'
-        ],
-        'Fees': [
-            'fee', 'charge', 'penalty', 'overdraft', 'service charge',
-            'monthly fee', 'annual fee', 'late fee'
-        ],
-        'Transfers': [
-            'transfer', 'wire', 'ach', 'internal transfer', 'between accounts'
         ],
         'Charitable Giving': [
             'charity', 'donation', 'nonprofit', 'fundraiser', 'cause', 'ngo', 
-            'red cross', 'unicef', 'salvation army','livingwatercommu'
+            'red cross', 'unicef', 'salvation army','livingwatercommu webpayment'
         ],
         'Investments': [
             'investment', 'brokerage', 'stock', 'mutual fund', 'robin',
@@ -164,6 +113,87 @@ class BankCSVImporter:
             'trash', 'sewer', 'waste management', 'garbage', 'recycling', 
             'penn waste', 'allied waste',  'wm'
             ]
+    }
+    
+    # Transaction category mappings based on description patterns
+    CATEGORY_MAPPINGS_PSECU = {
+        'Pets': [
+            'pet store', 'veterinarian', 'pet food', 'pet supplies', 'dog park', 'grooming',
+            'pet sitter', 'dog walker','paws','petco','chewy','VMD'
+        ],
+        'Charitable Giving': [
+            'charity', 'donation', 'nonprofit', 'fundraiser', 'cause', 'ngo', 
+            'red cross', 'unicef', 'salvation army','livingwatercommu',
+            'compassion'
+        ],
+        'Income': [
+            'direct deposit', 'payroll', 'salary', 'deposit', 'transfer in',
+            'income', 'wage', 'paycheck', 'refund', 'rebate', 'bonus','PERSHING ',
+            'Dividend APY Earned','SRECTrade','IRS TREAS','PERSHING'
+        ],
+        'Transfers': [
+            'Transfer', '$Transfer', 'internal transfer', 'between accounts','Ally','WEBXFR'
+        ],
+        'Insurance': [
+            'GUARDIAN' ,'INSURANCE' , 'DONEGAL'
+        ],
+        'Entertainment': [
+            'netflix', 'spotify', 'amazon prime', 'hulu', 'disney', 'movie',
+            'theater', 'concert', 'game', 'steam', 'playstation', 'xbox',
+            'peacock', 'paramount', 'apple tv', 'vudu', 'fandango','Hershey','tickets',
+            'URBAN PLAYGROUND','GET AIR ', 'DRT PERFORMANCE TIX'
+        ],
+        'Groceries': [
+            'grocery', 'supermarket', 'whole foods', 'safeway', 'kroger',
+            'walmart', 'COSTCO WHSE', 'trader joe', 'publix', 'meijer',
+            'sams club', 'aldi' ,'beer','giant','KARNS'
+        ],
+        'Dining': [
+            'restaurant', 'cafe', 'coffee', 'starbucks', 'mcdonald', 'burger king',
+            'subway', 'pizza', 'taco', 'chinese', 'italian', 'mexican', 'thai','chick-fil-a','DINER',
+            'SQ', 'SQUARE','food','pretzel','Red Robin','Noodles','Doordash','HelloFresh',
+            'Harvest','Mission BBQ','Longhorns','Bonefish','Pho','Freshido','Panra',
+            'Ice Cream','5Guys','POPEYES','DIXIES DOWN HOME','WINE AND SPIRITS','WENDYS','CHIPOTLE',
+            'PANERA BREAD','Taco Bell','LONGHORN STEAK','DAIRY QUEEN','DUCK DONUTS','CHOCOLATIER',
+            'JERSEY MIKES', 'BROTHER JOE*' ,'DUNKIN'
+        ],
+        'Transportation': [
+            'gas', 'fuel', 'shell', 'chevron', 'exxon', 'bp', 'mobil',
+            'uber', 'lyft', 'taxi', 'parking', 'toll', 'transit', 'bus', 'train',
+            'Penndot','Turkey Hill','Rutter*','Jiffy','sheetz','COSTCO GAS ','GIANT FUEL',
+            'PTC','PA DRIVER','ADVANCE AUTO',
+        ],
+        'Debt': [
+            'credit card', 'loan', 'mortgage', 'interest', 'debt','CAPITAL ONE',
+            'CITIZENS' ,'DEPT EDUCATION','DISCOVER','NELNET LOAN','chase',
+            'Bank Of America', 'CITI','LAUNCH SERVICING','WELLS FARGO CARD'
+        ],
+         'Utilities': [
+            'electric', 'power', 'gas utility', 'sewer', 'internet','ppl', 'veolia', 'suez','ugi'
+            'cable', 'phone', 'mobile', 'verizon', 'tmobile', 'comcast','LOWER PAXTON TWP',
+            'Waste Management' ,'UGI UTILITIES'
+        ],
+        'Healthcare': [
+            'pharmacy', 'doctor', 'hospital', 'dental', 'medical', 'cvs',
+            'walgreens', 'rite aid', 'kaiser', 'anthem', 'blue cross'
+        ],
+        'Shopping': [
+            'amazon', 'ebay', 'etsy', 'best buy', 'home depot', 'lowes',
+            'ikea', 'macy', 'nordstrom', 'clothing', 'shoes', 'jewelry',
+            'Michaels','Dollar Tree','Bath And Body Works','Five Below',
+            'kohls','target','AMAZON.COM', 'AMZ','DOLLARTREE','OLD NAVY',
+            'OLLIES'
+        ],
+        'Bills & Payments': [
+            'APTIVE','check','CRAIG PETROU','payment','Homeshield',
+            'Pest','Pools','ADVANCED HOOPS','RING','Tomlinson',
+            'PRECISION GARAGE DOOR','CLEAN WATER POOL','Pool','TURBOTAX',
+            'SAMS MEMBERSHIP'
+        ],
+        'Fee': [
+            'service fee', 'maintenance fee', 'monthly fee', 'transaction fee',
+            'Courtesy Pay Fee'
+        ]
     }
 
     def __init__(self, file_path: str, bank_type: str = 'generic'):
@@ -313,7 +343,7 @@ class BankCSVImporter:
             
             desc_lower = description.lower()
             
-            for category, keywords in self.CATEGORY_MAPPINGS_MINE.items():
+            for category, keywords in self.CATEGORY_MAPPINGS_PSECU.items():
                 for keyword in keywords:
                     if keyword.lower() in desc_lower:
                         print (f"Categorizing '{description}' as '{category}' based on keyword '{keyword}'")
